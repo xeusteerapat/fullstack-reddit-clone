@@ -65,7 +65,7 @@ export class UserResolver {
         errors: [
           {
             field: 'username',
-            message: 'Username length must be more than 2 characters',
+            message: 'Username length must be more than 4 characters',
           },
         ],
       };
@@ -76,7 +76,7 @@ export class UserResolver {
         errors: [
           {
             field: 'password',
-            message: 'Password length must be more than 2 characters',
+            message: 'Password length must be more than 6 characters',
           },
         ],
       };
