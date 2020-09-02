@@ -6,6 +6,7 @@ import {
   MeQuery,
   LoginMutation,
   RegisterMutation,
+  LogoutMutation,
 } from '../generated/graphql';
 import theme from '../theme';
 
@@ -58,6 +59,14 @@ const client = createClient({
                   };
                 }
               }
+            );
+          },
+          logout: (_result, _, cache, __) => {
+            betterUpdateQuery<LogoutMutation, MeQuery>(
+              cache,
+              { query: MeDocument },
+              _result,
+              () => ({ me: null })
             );
           },
         },
