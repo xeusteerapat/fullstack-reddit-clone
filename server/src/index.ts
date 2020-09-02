@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { UserResolver } from './resolvers/user';
 import { PostResolver } from './resolvers/post';
 import { MikroORM } from '@mikro-orm/core';
-import { __prod__ } from './constants';
+import { __prod__, COOKIE_NAME } from './constants';
 import microConfig from './mikro-orm.config';
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
@@ -30,9 +30,10 @@ const main = async () => {
       credentials: true,
     })
   );
+
   app.use(
     session({
-      name: 'qid',
+      name: COOKIE_NAME,
       store: new RedisStore({
         client: redisClient,
         disableTouch: true,
@@ -63,7 +64,7 @@ const main = async () => {
   });
 
   app.listen(4000, () => {
-    console.log('server started on localhost:4000');
+    console.log('server started on localhost:4000 🚀');
   });
 };
 

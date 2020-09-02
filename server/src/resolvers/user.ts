@@ -1,3 +1,4 @@
+import { COOKIE_NAME } from './../constants';
 import {
   Resolver,
   Ctx,
@@ -45,14 +46,12 @@ class UserResponse {
 export class UserResolver {
   @Query(() => User, { nullable: true })
   async me(@Ctx() { req, em }: MyContext) {
+    // you are not logged in
     if (!req.session.userId) {
-      return null; // You are not login
+      return null;
     }
 
-    const user = await em.findOne(User, {
-      id: req.session.userId,
-    });
-
+    const user = await em.findOne(User, { id: req.session.userId });
     return user;
   }
 
@@ -155,5 +154,21 @@ export class UserResolver {
     return {
       user,
     };
+  }
+
+  @Mutation(() => Boolean)
+  logout(@Ctx() { req, res }: MyContext) {
+    return new Promise(resolve =>
+      req.session.destroy(err => {
+        res.clearCookie(COOKIE_NAME);
+        if (err) {
+          console.log(err);
+          resolve(false);
+          return;
+        }
+
+        resolve(true);
+      })
+    );
   }
 }
