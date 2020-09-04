@@ -23,10 +23,9 @@ export async function sendEmail(to: string, html: string) {
     from: '"Fred Foo 👻" <foo@example.com>', // sender address
     to, // list of receivers
     subject: 'Change Password', // Subject line
-    html
+    html,
   });
 
   console.log('Message sent: %s', info.messageId);
   console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
 }
-
