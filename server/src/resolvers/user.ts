@@ -1,5 +1,5 @@
 import { validateRegister } from './../utils/validateRegister';
-import { COOKIE_NAME } from './../constants';
+import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from './../constants';
 import {
   Resolver,
   Ctx,
@@ -14,6 +14,8 @@ import { User } from './../entities/User';
 import { MyContext } from './../types';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { UsernamePasswordInput } from './UsernamePasswordInput';
+import { sendEmail } from '../utils/sendEmail';
+import { v4 as uuid } from 'uuid';
 
 @ObjectType()
 class FieldError {
@@ -156,8 +158,30 @@ export class UserResolver {
   }
 
   @Mutation(() => Boolean)
-  async forgotPassword(@Arg('email') email: string, @Ctx() { em }: MyContext) {
-    // const user = await em.findOne(User, { email });
+  async forgotPassword(
+    @Arg('email') email: string,
+    @Ctx() { em, redis }: MyContext
+  ) {
+    const user = await em.findOne(User, { email });
+
+    if (!user) {
+      return true;
+    }
+
+    const token = uuid();
+
+    redis.set(
+      FORGET_PASSWORD_PREFIX + token,
+      user.id,
+      'ex',
+      1000 * 60 * 24 * 3
+    );
+
+    await sendEmail(
+      email,
+      `<a href="http://localhost:3000/change-password/${token}">reset password</a>`
+    );
+
     return true;
   }
 }
