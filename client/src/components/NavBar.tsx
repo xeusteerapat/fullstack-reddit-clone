@@ -6,7 +6,7 @@ import { isServer } from '../utils/isServer';
 
 interface NavBarProps {}
 
-const NavBar: React.FC<NavBarProps> = () => {
+export const NavBar: React.FC<NavBarProps> = () => {
   const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
   const [{ data, fetching }] = useMeQuery({
     pause: isServer(),
@@ -48,10 +48,9 @@ const NavBar: React.FC<NavBarProps> = () => {
   }
 
   return (
-    <Flex bg='tomato' p={4}>
+    <Flex bg='tomato' p={4} position='sticky' top={0} zIndex={1}>
       <Box ml={'auto'}>{body}</Box>
     </Flex>
   );
 };
 
-export default NavBar;
