@@ -49,7 +49,7 @@ const CreatePost: React.FC<{}> = () => {
               variantColor='teal'
               isLoading={isSubmitting}
             >
-              Login
+              Create Post
             </Button>
           </Form>
         )}
